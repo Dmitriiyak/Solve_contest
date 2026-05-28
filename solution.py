@@ -9,7 +9,11 @@ model = YOLO('yolo11n.pt')
 result = model('run_01/photo/frame1.jpg')
 result = result[0]
 
-FOV_x = 90 #!!! РАЗОБРАТЬСЯ
+FOV_x = 65 #!!! РАЗОБРАТЬСЯ
+FOV_y = 40 #!!! РАЗОБРАТЬСЯ
+
+fx = W / 2 * math.tan(math.radians(FOV_x / 2))
+fy = H / 2 * math.tan(math.radians(FOV_y / 2))
 
 boxes = result.boxes
 
