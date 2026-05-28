@@ -25,20 +25,14 @@ for i in range(len(boxes)):
         print(f"  Рамка: [{x1}, {y1}, {x2}, {y2}]")
 
 FOV_x = 65 #!!! РАЗОБРАТЬСЯ
-FOV_y = 40 #!!! РАЗОБРАТЬСЯ
-
 fx = W / (2 * math.tan(math.radians(FOV_x / 2)))
-fy = H / (2 * math.tan(math.radians(FOV_y / 2)))
 cx = W / 2
 x_center = (x1 + x2) / 2
 alpha_rad = math.atan2(x_center - cx,  fx)
 
-print(alpha_rad)
-print()
-
 import json
 
-def load_lidar(run_path='run_01'):
+def load_lidar(run_path):
     points = []
     dist = []
     with open(f'{run_path}/lidar/lidar_scans.jsonl', 'r') as f:
@@ -46,9 +40,12 @@ def load_lidar(run_path='run_01'):
             data = json.loads(line)
             for i in range(len(data['angles_rad'])):
                 angle = data['angles_rad'][i]
-                if abs(angle - alpha_rad) < 0.01:
-                     points.append(angle)
-                     dist.append(data['ranges_m'][i]) # TODO: проверить что не нужно прибавлять 1 из-за null (len должен совпадать у списков)
+                if abs(angle - alpha_rad) < 0.05:
+                    points.append(angle)
+                    dist.append(data['ranges_m'][i])
     return dist
 
-print(load_lidar())
+files = ['run_01', 'run_02', 'run_03']
+
+for file in files:
+    print(f'{min(load_lidar(file))}')
